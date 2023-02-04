@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import {
-  Button, DatePicker, Form, InputNumber, Select, Divider, Input, Switch,
+  Popover, Form, InputNumber, Select, Divider, Input, Switch,
   Row, Col, Card
 } from 'antd';
 import type { InputProps, SelectProps, SwitchProps, InputNumberProps } from 'antd';
@@ -8,6 +8,7 @@ import { SmileFilled, CopyrightOutlined } from '@ant-design/icons';
 import Head from 'next/head';
 import Link from 'next/link';
 import { useQRCode } from 'next-qrcode';
+import { HexAlphaColorPicker } from "react-colorful";
 
 const FormItem = Form.Item
 
@@ -20,10 +21,14 @@ export default function Home() {
   const [renderVal, setRenderVal] = useState("Canvas");
   const [textVal, setTextVal] = useState("https://www.instagram.com/ekayulianapd");
   const [includeOptionsVal, setIncludeOptionsVal] = useState(true);
+  const [optionTypeVal, setOptionTypeVal] = useState('image/png');
+  const [optionQualityVal, setOptionQualityVal] = useState(0.92);
   const [optionLevelVal, setOptionLevelVal] = useState('M');
   const [optionMarginVal, setOptionMarginVal] = useState(2);
   const [optionScaleVal, setOptionScaleVal] = useState(5);
   const [optionWidthVal, setOptionWidthVal] = useState(150);
+  const [optionDarkColorVal, setOptionDarkColorVal] = useState("#000000");
+  const [optionLightColorVal, setOptionLightColorVal] = useState("#ffbf60");
   const [includeLogoVal, setIncludeLogoVal] = useState(true);
   const [logoVal, setLogoVal] = useState("http://localhost:3000/favicon.ico");
   const [includeLogoOptionVal, setIncludeLogoOptionVal] = useState(true);
@@ -34,10 +39,14 @@ export default function Home() {
   const [form] = Form.useForm<{
     render: string;
     text: string;
+    optionType: string;
+    optionQuality: number;
     optionLevel: string;
     optionMargin: number;
     optionScale: number;
     optionWidth: number;
+    optionDarkColor: string;
+    optionLightColor: string;
     logo: string;
     optionLogoWidth: number;
     optionLogoX: number;
@@ -48,10 +57,14 @@ export default function Home() {
     form.setFieldsValue({
       render: renderVal,
       text: textVal,
+      optionType: optionTypeVal,
+      optionQuality: optionQualityVal,
       optionLevel: optionLevelVal,
       optionMargin: optionMarginVal,
       optionScale: optionScaleVal,
       optionWidth: optionWidthVal,
+      optionDarkColor: optionDarkColorVal,
+      optionLightColor: optionLightColorVal,
       logo: logoVal,
       optionLogoWidth: optionLogoWidthVal,
       optionLogoX: optionLogoXVal,
@@ -70,6 +83,17 @@ export default function Home() {
 
   const onIncludeOptionsChange: SwitchProps["onChange"] = (checked) => {
     setIncludeOptionsVal(checked);
+  }
+
+  const onOptionTypeChange: SelectProps["onChange"] = (value, option) => {
+    setOptionTypeVal(value);
+  };
+
+  const onOptionQualityChange: InputNumberProps["onChange"] = (value) => {
+    if (!value) {
+      return
+    }
+    setOptionQualityVal(Number(Number(value).toFixed(2)));
   }
 
   const onOptionLevelChange: SelectProps["onChange"] = (value, option) => {
@@ -95,6 +119,28 @@ export default function Home() {
       return
     }
     setOptionWidthVal(Number(value));
+  }
+
+  const onOptionDarkColorChange: InputProps["onChange"] = (event) => {
+    setOptionDarkColorVal(event.target.value);
+  }
+
+  const onOptionDarkColorPickerChange = (color: string) => {
+    setOptionDarkColorVal(color);
+    form.setFieldsValue({
+      optionDarkColor: color
+    });
+  }
+
+  const onOptionLightColorChange: InputProps["onChange"] = (event) => {
+    setOptionLightColorVal(event.target.value);
+  }
+
+  const onOptionLightColorPickerChange = (color: string) => {
+    setOptionLightColorVal(color);
+    form.setFieldsValue({
+      optionLightColor: color
+    });
   }
 
   const onIncludeLogoChange: SwitchProps["onChange"] = (checked) => {
@@ -143,8 +189,8 @@ export default function Home() {
         scale: optionScaleVal,
         width: optionWidthVal,
         color: {
-          dark: '#010599FF',
-          light: '#FFBF60FF',
+          dark: optionDarkColorVal,
+          light: optionLightColorVal,
         }
       }
     } : {}),
@@ -160,6 +206,24 @@ export default function Home() {
         } : {})
       }
     } : {})
+  };
+
+  const imageProps = {
+    text: textVal, // required
+    ...(includeOptionsVal ? {
+      options: {
+        type: optionTypeVal,
+        quality: optionQualityVal,
+        level: optionLevelVal,
+        margin: optionMarginVal,
+        scale: optionScaleVal,
+        width: optionWidthVal,
+        color: {
+          dark: optionDarkColorVal,
+          light: optionLightColorVal,
+        }
+      }
+    } : {}),
   };
 
   return (
@@ -222,7 +286,44 @@ export default function Home() {
 
               <Card hoverable={includeOptionsVal}>
 
-                <FormItem name="optionLevel" label="Quality">
+                {renderVal === "Image" ? // additional option for render image
+                  <div>
+                    <FormItem name="optionType" label="Type">
+                      <Select
+                        className="width-100-pc"
+                        onChange={onOptionTypeChange}
+                        options={[
+                          {
+                            value: 'image/png',
+                            label: 'image/png',
+                          },
+                          {
+                            value: 'image/jpeg',
+                            label: 'image/jpeg',
+                          },
+                          {
+                            value: 'image/webp',
+                            label: 'image/webp',
+                          },
+                        ]}
+                        disabled={!includeOptionsVal}
+                      />
+                    </FormItem>
+                    <FormItem name="optionQuality" label="Quality">
+                      <InputNumber
+                        className="width-100-pc"
+                        onChange={onOptionQualityChange}
+                        min={0}
+                        max={1}
+                        step={0.01}
+                        controls
+                        disabled={!includeOptionsVal}
+                      />
+                    </FormItem>
+                  </div>
+                  : null}
+
+                <FormItem name="optionLevel" label="Level">
                   <Select
                     className="width-100-pc"
                     onChange={onOptionLevelChange}
@@ -278,69 +379,113 @@ export default function Home() {
                   />
                 </FormItem>
 
-              </Card>
-
-              <FormItem label="Include Logo" noStyle>
-                <div style={{ marginTop: 45, marginBottom: 18 }}>
-                  Include Logo?&nbsp;<Switch onChange={onIncludeLogoChange} defaultChecked />
-                </div>
-              </FormItem>
-
-              <Divider plain orientation="left"><strong>Logo</strong></Divider>
-
-              <Card hoverable={includeLogoVal}>
-
-                <FormItem name="logo" label="Source">
+                <FormItem name="optionDarkColor" label="Dark Color">
                   <Input
                     className="width-100-pc"
-                    onChange={onLogoChange}
-                    disabled={!includeLogoVal}
+                    onChange={onOptionDarkColorChange}
+                    addonAfter={
+                      includeOptionsVal ?
+                        <Popover
+                          trigger="click"
+                          placement="bottomRight"
+                          content={<HexAlphaColorPicker color={optionDarkColorVal} onChange={onOptionDarkColorPickerChange} />}
+                        >
+                          <div style={{ backgroundColor: optionDarkColorVal, width: 90, height: 30 }} />
+                        </Popover>
+                        : null
+                    }
+                    disabled={!includeOptionsVal}
                   />
                 </FormItem>
 
-                <FormItem label="Include Logo Options" noStyle>
-                  <div style={{ marginTop: 45, marginBottom: 18 }}>
-                    Include Options?&nbsp;<Switch onChange={onIncludeLogoOptionChange} defaultChecked />
-                  </div>
+                <FormItem name="optionLightColor" label="Light Color">
+                  <Input
+                    className="width-100-pc"
+                    onChange={onOptionLightColorChange}
+                    addonAfter={
+                      includeOptionsVal ?
+                        <Popover
+                          trigger="click"
+                          placement="bottomRight"
+                          content={<HexAlphaColorPicker color={optionLightColorVal} onChange={onOptionLightColorPickerChange} />}
+                        >
+                          <div style={{ backgroundColor: optionLightColorVal, width: 90, height: 30 }} />
+                        </Popover>
+                        : null
+                    }
+                    disabled={!includeOptionsVal}
+                  />
                 </FormItem>
 
-                <Divider plain orientation="left"><strong>Options</strong></Divider>
-
-                <Card>
-
-                  <FormItem name="optionLogoWidth" label="Width">
-                    <InputNumber
-                      className="width-100-pc"
-                      onChange={onOptionLogoWidthChange}
-                      min={1}
-                      controls
-                      disabled={!includeLogoVal || !includeLogoOptionVal}
-                    />
-                  </FormItem>
-
-                  <FormItem name="optionLogoX" label="X">
-                    <InputNumber
-                      className="width-100-pc"
-                      onChange={onOptionLogoXChange}
-                      min={1}
-                      controls
-                      disabled={!includeLogoVal || !includeLogoOptionVal}
-                    />
-                  </FormItem>
-
-                  <FormItem name="optionLogoY" label="Y">
-                    <InputNumber
-                      className="width-100-pc"
-                      onChange={onOptionLogoYChange}
-                      min={1}
-                      controls
-                      disabled={!includeLogoVal || !includeLogoOptionVal}
-                    />
-                  </FormItem>
-
-                </Card>
-
               </Card>
+
+              {renderVal === "Canvas" ?
+
+                <div>
+                  <FormItem label="Include Logo" noStyle>
+                    <div style={{ marginTop: 45, marginBottom: 18 }}>
+                      Include Logo?&nbsp;<Switch onChange={onIncludeLogoChange} defaultChecked />
+                    </div>
+                  </FormItem>
+
+                  <Divider plain orientation="left"><strong>Logo</strong></Divider>
+
+                  <Card hoverable={includeLogoVal}>
+
+                    <FormItem name="logo" label="Source">
+                      <Input
+                        className="width-100-pc"
+                        onChange={onLogoChange}
+                        disabled={!includeLogoVal}
+                      />
+                    </FormItem>
+
+                    <FormItem label="Include Logo Options" noStyle>
+                      <div style={{ marginTop: 45, marginBottom: 18 }}>
+                        Include Options?&nbsp;<Switch onChange={onIncludeLogoOptionChange} defaultChecked />
+                      </div>
+                    </FormItem>
+
+                    <Divider plain orientation="left"><strong>Options</strong></Divider>
+
+                    <Card>
+
+                      <FormItem name="optionLogoWidth" label="Width">
+                        <InputNumber
+                          className="width-100-pc"
+                          onChange={onOptionLogoWidthChange}
+                          min={1}
+                          controls
+                          disabled={!includeLogoVal || !includeLogoOptionVal}
+                        />
+                      </FormItem>
+
+                      <FormItem name="optionLogoX" label="X">
+                        <InputNumber
+                          className="width-100-pc"
+                          onChange={onOptionLogoXChange}
+                          min={1}
+                          controls
+                          disabled={!includeLogoVal || !includeLogoOptionVal}
+                        />
+                      </FormItem>
+
+                      <FormItem name="optionLogoY" label="Y">
+                        <InputNumber
+                          className="width-100-pc"
+                          onChange={onOptionLogoYChange}
+                          min={1}
+                          controls
+                          disabled={!includeLogoVal || !includeLogoOptionVal}
+                        />
+                      </FormItem>
+
+                    </Card>
+
+                  </Card>
+                </div>
+
+                : null}
 
             </Form>
 
@@ -355,22 +500,9 @@ export default function Home() {
                       <Canvas
                         {...canvasProps}
                       />
-                    ,
-                    "Image": // If image selected
+                    , "Image": // If image selected
                       <Image
-                        text={'https://github.com/bunlong/next-qrcode'}
-                        options={{
-                          type: 'image/jpeg',
-                          quality: 0.3,
-                          level: 'M',
-                          margin: 3,
-                          scale: 4,
-                          width: 200,
-                          color: {
-                            dark: '#010599FF',
-                            light: '#FFBF60FF',
-                          },
-                        }}
+                        {...imageProps}
                       />
                   }[renderVal]}
                 </div>
@@ -385,10 +517,13 @@ export default function Home() {
           </Col>
         </Row>
       </div>
+
       <footer className="mt-5">
-        Thanks to <a href="https://www.instagram.com/ekayulianapd" target="_blank">Eka Yuliana</a>
-        &nbsp;<CopyrightOutlined /> 2023
-        &nbsp;All Right Reserved
+        <div className="container footer">
+          Thanks to <a href="https://www.instagram.com/ekayulianapd" target="_blank">Eka Yuliana</a>
+          &nbsp;<CopyrightOutlined /> 2023
+          <br />All Right Reserved
+        </div>
       </footer>
     </div>
   )
