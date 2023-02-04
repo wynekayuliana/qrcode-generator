@@ -18,12 +18,12 @@ body {
   text-rendering: optimizeLegibility;
 }
 
-footer {
+.footer {
   border-top: 1px solid rgba(0, 0, 0, 0.18);
-  padding: 18px 45px;
+  padding: 18px 0;
   text-align: right;
-  background-color: #fff;
   color: var(--textColorSecondary);
+  line-height: 1.5;
 }
 
 .container,
