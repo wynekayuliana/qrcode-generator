@@ -18,6 +18,14 @@ body {
   text-rendering: optimizeLegibility;
 }
 
+footer {
+  border-top: 1px solid rgba(0, 0, 0, 0.18);
+  padding: 18px 45px;
+  text-align: right;
+  background-color: #fff;
+  color: var(--textColorSecondary);
+}
+
 .container,
 .container-fluid,
 .container-sm,
