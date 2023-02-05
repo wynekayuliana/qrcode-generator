@@ -28,9 +28,9 @@ export default function Home() {
   const [optionScaleVal, setOptionScaleVal] = useState(5);
   const [optionWidthVal, setOptionWidthVal] = useState(150);
   const [optionDarkColorVal, setOptionDarkColorVal] = useState("#000000");
-  const [optionLightColorVal, setOptionLightColorVal] = useState("#ffbf60");
+  const [optionLightColorVal, setOptionLightColorVal] = useState("#fbfbfb");
   const [includeLogoVal, setIncludeLogoVal] = useState(true);
-  const [logoVal, setLogoVal] = useState("http://localhost:3000/favicon.ico");
+  const [logoVal, setLogoVal] = useState("https://wynekayuliana.github.io/qrcode-generator/assets/smiling-face.png"); // http://localhost:3000 || https://wynekayuliana.github.io/qrcode-generator
   const [includeLogoOptionVal, setIncludeLogoOptionVal] = useState(true);
   const [optionLogoWidthVal, setOptionLogoWidthVal] = useState(35);
   const [optionLogoXVal, setOptionLogoXVal] = useState(58);
@@ -228,10 +228,12 @@ export default function Home() {
 
   return (
     <div style={content}>
+
       <Head>
         <title>QR Code Generator | Eka Yuliana</title>
         <link rel="icon" href="/favicon.ico" />
       </Head>
+
       <div className="text-center mb-5">
         <Link href="#" className="logo mr-0">
           <SmileFilled style={{ fontSize: 48 }} />
@@ -240,6 +242,7 @@ export default function Home() {
         <p className="mb-0 mt-3 text-disabled">QR Code Generator</p>
 
       </div>
+
       <div className="container">
         <Row>
           <Col xs={{ span: 22, offset: 1 }} lg={{ span: 16, offset: 4 }}>
@@ -250,183 +253,208 @@ export default function Home() {
             >
               <Card hoverable>
 
-                <FormItem name="render" label="Render">
-                  <Select
-                    className="width-100-pc"
-                    onChange={onRenderChange}
-                    options={[
-                      {
-                        value: 'Canvas',
-                        label: 'Canvas',
-                      },
-                      {
-                        value: 'Image',
-                        label: 'Image',
-                      },
-                    ]}
-                  />
-                </FormItem>
+                <Row gutter={8}>
 
-                <FormItem name="text" label="Text">
-                  <Input
-                    className="width-100-pc"
-                    onChange={onTextChange}
-                  />
-                </FormItem>
+                  <Col span={24}>
+                    <FormItem name="render" label="Render">
+                      <Select
+                        className="width-100-pc"
+                        onChange={onRenderChange}
+                        options={[
+                          {
+                            value: 'Canvas',
+                            label: 'Canvas',
+                          },
+                          {
+                            value: 'Image',
+                            label: 'Image',
+                          },
+                        ]}
+                      />
+                    </FormItem>
+                  </Col>
+
+                  <Col span={24}>
+                    <FormItem name="text" label="Text">
+                      <Input
+                        className="width-100-pc"
+                        onChange={onTextChange}
+                      />
+                    </FormItem>
+                  </Col>
+
+                </Row>
 
               </Card>
 
-              <FormItem name="includeOptions" label="Include Options" noStyle>
-                <div style={{ marginTop: 45, marginBottom: 18 }}>
-                  Include Options?&nbsp;<Switch onChange={onIncludeOptionsChange} defaultChecked />
-                </div>
-              </FormItem>
+              <div className="mt-5 mb-3">
+                Include Options?&nbsp;<Switch onChange={onIncludeOptionsChange} defaultChecked />
+              </div>
 
               <Divider plain orientation="left"><strong>Options</strong></Divider>
 
               <Card hoverable={includeOptionsVal}>
 
-                {renderVal === "Image" ? // additional option for render image
-                  <div>
-                    <FormItem name="optionType" label="Type">
+                <Row gutter={8}>
+
+                  {renderVal === "Image" ? // additional option for render image
+                    <>
+                      <Col span={24}>
+                        <FormItem name="optionType" label="Type">
+                          <Select
+                            className="width-100-pc"
+                            onChange={onOptionTypeChange}
+                            options={[
+                              {
+                                value: 'image/png',
+                                label: 'image/png',
+                              },
+                              {
+                                value: 'image/jpeg',
+                                label: 'image/jpeg',
+                              },
+                              {
+                                value: 'image/webp',
+                                label: 'image/webp',
+                              },
+                            ]}
+                            disabled={!includeOptionsVal}
+                          />
+                        </FormItem>
+                      </Col>
+
+                      <Col span={24}>
+                        <FormItem name="optionQuality" label="Quality">
+                          <InputNumber
+                            className="width-100-pc"
+                            onChange={onOptionQualityChange}
+                            min={0}
+                            max={1}
+                            step={0.01}
+                            controls
+                            disabled={!includeOptionsVal}
+                          />
+                        </FormItem>
+                      </Col>
+                    </>
+                    : null}
+
+                  <Col span={24}>
+                    <FormItem name="optionLevel" label="Level">
                       <Select
                         className="width-100-pc"
-                        onChange={onOptionTypeChange}
+                        onChange={onOptionLevelChange}
                         options={[
                           {
-                            value: 'image/png',
-                            label: 'image/png',
+                            value: 'L',
+                            label: 'Low',
                           },
                           {
-                            value: 'image/jpeg',
-                            label: 'image/jpeg',
+                            value: 'M',
+                            label: 'Medium',
                           },
                           {
-                            value: 'image/webp',
-                            label: 'image/webp',
+                            value: 'Q',
+                            label: 'Quartile',
+                          },
+                          {
+                            value: 'H',
+                            label: 'High',
                           },
                         ]}
                         disabled={!includeOptionsVal}
                       />
                     </FormItem>
-                    <FormItem name="optionQuality" label="Quality">
+                  </Col>
+
+                  <Col lg={8} md={8} sm={24} xs={24}>
+                    <FormItem name="optionMargin" label="Margin">
                       <InputNumber
                         className="width-100-pc"
-                        onChange={onOptionQualityChange}
-                        min={0}
-                        max={1}
-                        step={0.01}
+                        onChange={onOptionMarginChange}
+                        min={1}
                         controls
                         disabled={!includeOptionsVal}
                       />
                     </FormItem>
-                  </div>
-                  : null}
+                  </Col>
 
-                <FormItem name="optionLevel" label="Level">
-                  <Select
-                    className="width-100-pc"
-                    onChange={onOptionLevelChange}
-                    options={[
-                      {
-                        value: 'L',
-                        label: 'Low',
-                      },
-                      {
-                        value: 'M',
-                        label: 'Medium',
-                      },
-                      {
-                        value: 'Q',
-                        label: 'Quartile',
-                      },
-                      {
-                        value: 'H',
-                        label: 'High',
-                      },
-                    ]}
-                    disabled={!includeOptionsVal}
-                  />
-                </FormItem>
+                  <Col lg={8} md={8} sm={24} xs={24}>
+                    <FormItem name="optionScale" label="Scale">
+                      <InputNumber
+                        className="width-100-pc"
+                        onChange={onOptionScaleChange}
+                        min={1}
+                        controls
+                        disabled={!includeOptionsVal}
+                      />
+                    </FormItem>
+                  </Col>
 
-                <FormItem name="optionMargin" label="Margin">
-                  <InputNumber
-                    className="width-100-pc"
-                    onChange={onOptionMarginChange}
-                    min={1}
-                    controls
-                    disabled={!includeOptionsVal}
-                  />
-                </FormItem>
+                  <Col lg={8} md={8} sm={24} xs={24}>
+                    <FormItem name="optionWidth" label="Width">
+                      <InputNumber
+                        className="width-100-pc"
+                        onChange={onOptionWidthChange}
+                        min={1}
+                        controls
+                        disabled={!includeOptionsVal}
+                      />
+                    </FormItem>
+                  </Col>
 
-                <FormItem name="optionScale" label="Scale">
-                  <InputNumber
-                    className="width-100-pc"
-                    onChange={onOptionScaleChange}
-                    min={1}
-                    controls
-                    disabled={!includeOptionsVal}
-                  />
-                </FormItem>
+                  <Col lg={12} md={12} sm={24} xs={24}>
+                    <FormItem name="optionDarkColor" label="Dark Color">
+                      <Input
+                        className="width-100-pc"
+                        onChange={onOptionDarkColorChange}
+                        addonAfter={
+                          includeOptionsVal ?
+                            <Popover
+                              trigger="click"
+                              placement="bottomRight"
+                              content={<HexAlphaColorPicker color={optionDarkColorVal} onChange={onOptionDarkColorPickerChange} />}
+                            >
+                              <div style={{ backgroundColor: optionDarkColorVal, width: 90, height: 30 }} />
+                            </Popover>
+                            : null
+                        }
+                        disabled={!includeOptionsVal}
+                      />
+                    </FormItem>
+                  </Col>
 
-                <FormItem name="optionWidth" label="Width">
-                  <InputNumber
-                    className="width-100-pc"
-                    onChange={onOptionWidthChange}
-                    min={1}
-                    controls
-                    disabled={!includeOptionsVal}
-                  />
-                </FormItem>
+                  <Col lg={12} md={12} sm={24} xs={24}>
+                    <FormItem name="optionLightColor" label="Light Color">
+                      <Input
+                        className="width-100-pc"
+                        onChange={onOptionLightColorChange}
+                        addonAfter={
+                          includeOptionsVal ?
+                            <Popover
+                              trigger="click"
+                              placement="bottomRight"
+                              content={<HexAlphaColorPicker color={optionLightColorVal} onChange={onOptionLightColorPickerChange} />}
+                            >
+                              <div style={{ backgroundColor: optionLightColorVal, width: 90, height: 30 }} />
+                            </Popover>
+                            : null
+                        }
+                        disabled={!includeOptionsVal}
+                      />
+                    </FormItem>
+                  </Col>
 
-                <FormItem name="optionDarkColor" label="Dark Color">
-                  <Input
-                    className="width-100-pc"
-                    onChange={onOptionDarkColorChange}
-                    addonAfter={
-                      includeOptionsVal ?
-                        <Popover
-                          trigger="click"
-                          placement="bottomRight"
-                          content={<HexAlphaColorPicker color={optionDarkColorVal} onChange={onOptionDarkColorPickerChange} />}
-                        >
-                          <div style={{ backgroundColor: optionDarkColorVal, width: 90, height: 30 }} />
-                        </Popover>
-                        : null
-                    }
-                    disabled={!includeOptionsVal}
-                  />
-                </FormItem>
-
-                <FormItem name="optionLightColor" label="Light Color">
-                  <Input
-                    className="width-100-pc"
-                    onChange={onOptionLightColorChange}
-                    addonAfter={
-                      includeOptionsVal ?
-                        <Popover
-                          trigger="click"
-                          placement="bottomRight"
-                          content={<HexAlphaColorPicker color={optionLightColorVal} onChange={onOptionLightColorPickerChange} />}
-                        >
-                          <div style={{ backgroundColor: optionLightColorVal, width: 90, height: 30 }} />
-                        </Popover>
-                        : null
-                    }
-                    disabled={!includeOptionsVal}
-                  />
-                </FormItem>
+                </Row>
 
               </Card>
 
               {renderVal === "Canvas" ?
 
                 <div>
-                  <FormItem label="Include Logo" noStyle>
-                    <div style={{ marginTop: 45, marginBottom: 18 }}>
-                      Include Logo?&nbsp;<Switch onChange={onIncludeLogoChange} defaultChecked />
-                    </div>
-                  </FormItem>
+                  <div className="mt-5 mb-3">
+                    Include Logo?&nbsp;<Switch onChange={onIncludeLogoChange} defaultChecked />
+                  </div>
 
                   <Divider plain orientation="left"><strong>Logo</strong></Divider>
 
@@ -440,45 +468,52 @@ export default function Home() {
                       />
                     </FormItem>
 
-                    <FormItem label="Include Logo Options" noStyle>
-                      <div style={{ marginTop: 45, marginBottom: 18 }}>
-                        Include Options?&nbsp;<Switch onChange={onIncludeLogoOptionChange} defaultChecked />
-                      </div>
-                    </FormItem>
+                    <div className="mt-5 mb-3">
+                      Include Options?&nbsp;<Switch onChange={onIncludeLogoOptionChange} defaultChecked />
+                    </div>
 
                     <Divider plain orientation="left"><strong>Options</strong></Divider>
 
                     <Card>
 
-                      <FormItem name="optionLogoWidth" label="Width">
-                        <InputNumber
-                          className="width-100-pc"
-                          onChange={onOptionLogoWidthChange}
-                          min={1}
-                          controls
-                          disabled={!includeLogoVal || !includeLogoOptionVal}
-                        />
-                      </FormItem>
+                      <Row gutter={8}>
 
-                      <FormItem name="optionLogoX" label="X">
-                        <InputNumber
-                          className="width-100-pc"
-                          onChange={onOptionLogoXChange}
-                          min={1}
-                          controls
-                          disabled={!includeLogoVal || !includeLogoOptionVal}
-                        />
-                      </FormItem>
+                        <Col lg={8} md={8} sm={24} xs={24}>
+                          <FormItem name="optionLogoWidth" label="Width">
+                            <InputNumber
+                              className="width-100-pc"
+                              onChange={onOptionLogoWidthChange}
+                              min={1}
+                              controls
+                              disabled={!includeLogoVal || !includeLogoOptionVal}
+                            />
+                          </FormItem>
+                        </Col>
 
-                      <FormItem name="optionLogoY" label="Y">
-                        <InputNumber
-                          className="width-100-pc"
-                          onChange={onOptionLogoYChange}
-                          min={1}
-                          controls
-                          disabled={!includeLogoVal || !includeLogoOptionVal}
-                        />
-                      </FormItem>
+                        <Col lg={8} md={8} sm={24} xs={24}>
+                          <FormItem name="optionLogoX" label="X">
+                            <InputNumber
+                              className="width-100-pc"
+                              onChange={onOptionLogoXChange}
+                              min={1}
+                              controls
+                              disabled={!includeLogoVal || !includeLogoOptionVal}
+                            />
+                          </FormItem>
+                        </Col>
+                        <Col lg={8} md={8} sm={24} xs={24}>
+                          <FormItem name="optionLogoY" label="Y">
+                            <InputNumber
+                              className="width-100-pc"
+                              onChange={onOptionLogoYChange}
+                              min={1}
+                              controls
+                              disabled={!includeLogoVal || !includeLogoOptionVal}
+                            />
+                          </FormItem>
+                        </Col>
+
+                      </Row>
 
                     </Card>
 
@@ -507,9 +542,9 @@ export default function Home() {
                   }[renderVal]}
                 </div>
 
-                <p>
+                <div>
                   Just right click on QR Code and select "Save Image As..."
-                </p>
+                </div>
               </div>
 
             </Card>
@@ -522,9 +557,10 @@ export default function Home() {
         <div className="container footer">
           Thanks to <a href="https://www.instagram.com/ekayulianapd" target="_blank">Eka Yuliana</a>
           &nbsp;<CopyrightOutlined /> 2023
-          <br />All Right Reserved
+          <br />All Rights Reserved
         </div>
       </footer>
+
     </div>
   )
 }
