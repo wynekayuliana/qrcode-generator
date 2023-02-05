@@ -48,9 +48,9 @@ jobs:
             exit 1
           fi
       - name: Setup Node
-        uses: actions/setup-node@v2
+        uses: actions/setup-node@v3
         with:
-          node-version: "14"
+          node-version: "16"
           cache: "npm" # ${{ steps.detect-package-manager.outputs.manager }}
           # The action defaults to search for the dependency file
           # (package-lock.json or yarn.lock) in the repository root, and uses
