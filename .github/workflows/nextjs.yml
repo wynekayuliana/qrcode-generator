@@ -29,7 +29,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
       - name: Detect package manager
         id: detect-package-manager
         run: |
@@ -48,7 +48,7 @@ jobs:
             exit 1
           fi
       - name: Setup Node
-        uses: actions/setup-node@v2
+        uses: actions/setup-node@v3
         with:
           node-version: "14"
           cache: ${{ steps.detect-package-manager.outputs.manager }}
@@ -58,7 +58,7 @@ jobs:
           # https://github.com/actions/setup-node#caching-packages-dependencies
           cache-dependency-path: "**/package-lock.json"
       - name: Setup Pages
-        uses: actions/configure-pages@v2
+        uses: actions/configure-pages@v3
         with:
           # Automatically inject basePath in your Next.js configuration file and disable
           # server side image optimization (https://nextjs.org/docs/api-reference/next/image#unoptimized).
