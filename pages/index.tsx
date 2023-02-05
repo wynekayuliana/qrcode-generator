@@ -30,7 +30,7 @@ export default function Home() {
   const [optionDarkColorVal, setOptionDarkColorVal] = useState("#000000");
   const [optionLightColorVal, setOptionLightColorVal] = useState("#fbfbfb");
   const [includeLogoVal, setIncludeLogoVal] = useState(true);
-  const [logoVal, setLogoVal] = useState("http://localhost:3000/assets/smiling-face.png"); // https://wynekayuliana.github.io/qrcode-generator
+  const [logoVal, setLogoVal] = useState("https://wynekayuliana.github.io/qrcode-generator/assets/smiling-face.png"); // http://localhost:3000 || https://wynekayuliana.github.io/qrcode-generator
   const [includeLogoOptionVal, setIncludeLogoOptionVal] = useState(true);
   const [optionLogoWidthVal, setOptionLogoWidthVal] = useState(35);
   const [optionLogoXVal, setOptionLogoXVal] = useState(58);
