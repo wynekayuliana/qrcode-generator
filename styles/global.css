@@ -4,6 +4,13 @@
   box-sizing: inherit;
 }
 
+/* #__next {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  min-width: 100vh;
+} */
+
 html {
   box-sizing: border-box;
   font-size: 14px;
